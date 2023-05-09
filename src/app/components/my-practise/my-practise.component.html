@@ -1,0 +1,184 @@
+<div class="bg-black text-white stat-title font-bold text-xl text-center p-4">
+  Kanban Sheet
+</div>
+<div class="p-2"></div>
+<div class="container content-center">
+  <!-- The button to open modal -->
+  <label for="my-modal" class="btn">Add Todo</label>
+
+  <div cdkDragHandle class="grid md:grid-cols-3 grid-cols-1 gap-4 text-center">
+    <div class="bg-red-200 hover:h-min">
+      <h2
+        class="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white rounded"
+      >
+        Todo
+      </h2>
+      <div
+        cdkDropList
+        #todoList="cdkDropList"
+        [cdkDropListData]="todo"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListConnectedTo]="[doneList, inProgress]"
+      >
+        <div *ngIf="todo.length != 0; else todoEmpty">
+          <div
+            cdkDrag
+            class="bg-slate-300 rounded m-2"
+            *ngFor="let i of todo; index as index"
+            (click)="openModel(i, index, 'todo')"
+          >
+            {{ i }}
+          </div>
+        </div>
+        <ng-template #todoEmpty>
+          <div cdkDrag>
+            <h4 class="rounded m-2 bg-red-200">No Tasks is in Todo</h4>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="bg-green-200 hover:h-min">
+      <h2
+        class="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 text-white rounded"
+      >
+        In Progress
+      </h2>
+
+      <div
+        cdkDropList
+        #inProgress="cdkDropList"
+        [cdkDropListData]="inprogress"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListConnectedTo]="[todoList, doneList]"
+      >
+        <div *ngIf="inprogress.length != 0; else inprogressEmpty">
+          <div
+            cdkDrag
+            class="bg-slate-300 rounded m-2"
+            *ngFor="let i of inprogress; index as index"
+            (click)="openModel(i, index, 'inprogress')"
+          >
+            {{ i }}
+          </div>
+        </div>
+        <ng-template #inprogressEmpty>
+          <div cdkDrag>
+            <h4 class="rounded m-2 bg-red-200">No Tasks is In Progress</h4>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="bg-green-200 hover:h-min">
+      <h2
+        class="bg-gradient-to-r from-orange-900 to-green-500 text-white rounded"
+      >
+        Done
+      </h2>
+
+      <div
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="done"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListConnectedTo]="[todoList, inProgress]"
+      >
+        <div *ngIf="done.length != 0; else doneEmpty">
+          <div
+            cdkDrag
+            class="bg-slate-300 rounded m-2"
+            *ngFor="let i of done; index as index"
+            (click)="openModel(i, index, 'done')"
+          >
+            {{ i }}
+          </div>
+        </div>
+        <ng-template #doneEmpty>
+          <div cdkDrag>
+            <h4 class="rounded m-2 bg-red-200">No Tasks Done</h4>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Put this part before </body> tag -->
+<input type="checkbox" id="my-modal" class="modal-toggle" />
+<div class="modal">
+  <div class="modal-box">
+    <label for="my-modal" class="btn btn-sm btn-circle absolute right-2 top-2"
+      >✕</label
+    >
+
+    <h3 class="font-bold text-xl text-center bg-black text-white m-10 rounded">
+      Add Todo
+    </h3>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Todo</span>
+      </label>
+      <label class="input-group rounded">
+        <input
+          type="text"
+          #todoToAdd
+          placeholder="Todo"
+          class="input input-bordered w-full"
+        />
+      </label>
+      <div class="modal-action">
+        <label
+          class="btn btn-success mt-6 w-full"
+          for="my-modal"
+          (click)="addTodo(todoToAdd.value)"
+        >
+          Save
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Put this part before </body> tag -->
+<input type="checkbox" id="my-modal-3" class="modal-toggle" />
+<div class="modal">
+  <div class="modal-box relative">
+    <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2"
+      >✕</label
+    >
+    <h3 class="text-lg font-bold">Edit Task</h3>
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Todo</span>
+      </label>
+      <label class="input-group rounded">
+        <input
+          type="text"
+          #todoToedit
+          value="{{ editString }}"
+          placeholder="Todo"
+          class="input input-bordered w-full"
+        />
+      </label>
+      <div class="modal-action">
+        <label
+          class="btn btn-warning mt-6 w-1/2"
+          for="my-modal-3"
+          (click)="deleteTodo(editIndex)"
+        >
+          Delete
+        </label>
+
+        <label
+          class="btn btn-success mt-6 w-1/2"
+          for="my-modal-3"
+          (click)="editTodo(todoToedit.value, editIndex)"
+        >
+          Save
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
